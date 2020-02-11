@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AuthApp.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AuthApp.Controllers
 {
@@ -6,12 +9,25 @@ namespace AuthApp.Controllers
     [ApiController]
     public class AuthController : Controller
     {
-        public AppDbContext DbContext { get; private set; }
+        private readonly AppDbContext DbContext;
 
         public AuthController(AppDbContext dbContext)
         {
             this.DbContext = dbContext;
         }
 
+        [HttpPost]
+        public IActionResult Register(RegisterUserDTO userDTO)
+        {
+            if (DbContext.Users.Count() > 0)
+            {
+                return Forbid();
+            }
+
+            DbContext.Users.Add(userDTO);
+            DbContext.SaveChanges();
+
+            return Created("", new { JWT = "" });
+        }
     }
 }

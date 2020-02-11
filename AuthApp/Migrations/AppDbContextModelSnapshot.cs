@@ -3,16 +3,14 @@ using AuthApp;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AuthApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200211102511_Migrate")]
-    partial class Migrate
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,6 +31,18 @@ namespace AuthApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Groups");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            GroupName = "Users"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            GroupName = "Admins"
+                        });
                 });
 
             modelBuilder.Entity("AuthApp.Models.Role", b =>
@@ -42,12 +52,43 @@ namespace AuthApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
                     b.Property<string>("RoleName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupId");
+
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            GroupId = 1,
+                            RoleName = "User"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            GroupId = 1,
+                            RoleName = "SuperUser"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            GroupId = 2,
+                            RoleName = "Admin"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            GroupId = 2,
+                            RoleName = "SuperAdmin"
+                        });
                 });
 
             modelBuilder.Entity("AuthApp.Models.User", b =>
@@ -56,9 +97,6 @@ namespace AuthApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Login")
                         .HasColumnType("nvarchar(max)");
@@ -74,21 +112,22 @@ namespace AuthApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
-
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("AuthApp.Models.User", b =>
+            modelBuilder.Entity("AuthApp.Models.Role", b =>
                 {
                     b.HasOne("AuthApp.Models.Group", "Group")
                         .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
+            modelBuilder.Entity("AuthApp.Models.User", b =>
+                {
                     b.HasOne("AuthApp.Models.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")

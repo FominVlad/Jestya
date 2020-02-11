@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -8,8 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200211102408_Migrate.cs" />
-    <Compile Remove="Migrations\20200211102408_Migrate.Designer.cs" />
+    <Compile Remove="Migrations\20200211150419_CreateDB.cs" />
+    <Compile Remove="Migrations\20200211150419_CreateDB.Designer.cs" />
+    <Compile Remove="Migrations\20200211150630_CreateDB.cs" />
+    <Compile Remove="Migrations\20200211150630_CreateDB.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\Db\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
